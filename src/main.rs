@@ -22,9 +22,9 @@ async fn main() {
 
     if ret.is_ok() {
         let result = ret.unwrap();
-        return println!("{:?}", result);
+        return println!("Modulo jar criado/atualizado: {}", result);
     }
 
     let result = ret.err().unwrap();
-    return println!("Deu erro {}", result);
+    return println!("Ocorreu um erro {}", result);
 }

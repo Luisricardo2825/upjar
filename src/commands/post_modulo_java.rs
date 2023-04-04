@@ -9,11 +9,12 @@ use tokio_util::codec::{BytesCodec, FramedRead};
 
 use crate::{
     auth::login::{login, LoginRet},
+    resources::get_json,
     schemas::{
         builder_config::BuilderConfig, login_schema::AccessData,
         post_cria_modulo_schema::PostCriaModuloSchema,
     },
-    utils::replace_param::replace_param, resources::get_json,
+    utils::replace_param::replace_param,
 };
 use serde::{Deserialize, Serialize};
 
@@ -76,12 +77,13 @@ async fn action(config: &BuilderConfig) -> Result<String, String> {
                 last_char,
                 &client,
                 &result,
+                &file,
             )
             .await;
 
             if value.is_ok() {
                 let cod_jar = value.unwrap();
-
+                println!("Foi encontrado um jar com mesmo nome, removendo...");
                 post_delete_jar(
                     config,
                     (&jsession_token).to_owned(),
@@ -299,6 +301,8 @@ async fn post_delete_jar(
         .send()
         .await
         .expect("Erro sending request");
+
+    println!("Jar {} econtrado e deletado", cod_jar)
 }
 
 async fn get_existing_jar(
@@ -307,13 +311,18 @@ async fn get_existing_jar(
     last_char: char,
     client: &reqwest::Client,
     cod_module: &String,
+    path: &Path,
 ) -> Result<String, String> {
     let url = (config).to_owned().url;
-    let value = config.resource_id.to_owned();
-
     let mut json_get_modulo_java = get_json("getJar.json");
 
-    json_get_modulo_java = replace_param(&json_get_modulo_java, "fileName", value);
+    let file_name = path
+        .file_name()
+        .expect("Error getting file_name")
+        .to_os_string()
+        .into_string()
+        .expect("Error converting file_name");
+    json_get_modulo_java = replace_param(&json_get_modulo_java, "fileName", file_name);
     json_get_modulo_java = replace_param(&json_get_modulo_java, "codModulo", cod_module.to_owned());
 
     let endpoint_modulo =
@@ -343,7 +352,7 @@ async fn get_existing_jar(
     let response = (&json_module_parsed).response_body.as_ref().unwrap();
     let result = response.result.get(0);
     if result.is_some() {
-        let ret = result.unwrap().get(0).unwrap().to_owned();
+        let ret = result.unwrap().get(1).unwrap().to_owned();
         return Ok(ret);
     }
     return Err("".to_owned());
