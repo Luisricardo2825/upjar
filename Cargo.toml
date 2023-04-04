@@ -1,5 +1,5 @@
 [package]
-name = "upload_jar"
+name = "upjar"
 version = "0.1.0"
 edition = "2021"
 authors = ["Luis Ricardo Alves Santos"]

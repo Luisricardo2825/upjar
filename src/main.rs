@@ -1,6 +1,6 @@
 use std::env;
 
-use upload_jar::{
+use upjar::{
     commands::post_modulo_java::post_modulo_java, schemas::builder_config::BuilderConfig,
     utils::string_utils::get_external_json,
 };
