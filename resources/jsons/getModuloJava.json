@@ -1,0 +1,17 @@
+{
+  "serviceName": "DatasetSP.loadRecords",
+  "requestBody": {
+    "dataSetID": "00D",
+    "entityName": "ModuloAdicional",
+    "standAlone": false,
+    "fields": ["CODMODULO", "RESOURCEID", "DESCRMODULO"],
+    "tryJoinedFields": true,
+    "parallelLoader": true,
+    "criteria": {
+      "expression": "((ModuloAdicional.RESOURCEID = '${{resourceId}}') /*HAS_PERSONALIZED_FILTER*/ )",
+      "parameters": []
+    },
+    "ignoreListenerMethods": "",
+    "useDefaultRowsLimit": true
+  }
+}

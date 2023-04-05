@@ -1,0 +1,10 @@
+{
+  "serviceName": "DatasetSP.removeRecord",
+  "requestBody": {
+    "dataSetID": "00R",
+    "entityName": "ArquivoModulo",
+    "standAlone": false,
+    "pks": [{ "CODMODULO": "${{codModulo}}", "CODJAR": "${{codJar}}" }],
+    "ignoreListenerMethods": ""
+  }
+}

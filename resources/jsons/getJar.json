@@ -1,0 +1,17 @@
+{
+  "serviceName": "DatasetSP.loadRecords",
+  "requestBody": {
+    "dataSetID": "00D",
+    "entityName": "ArquivoModulo",
+    "standAlone": false,
+    "fields": ["CODMODULO", "DESCRICAO", "CODJAR"],
+    "tryJoinedFields": true,
+    "parallelLoader": true,
+    "criteria": {
+      "expression": "((ArquivoModulo.DESCRICAO = '${{fileName}}' and ArquivoModulo.CODMODULO = '${{codModulo}}') /*HAS_PERSONALIZED_FILTER*/ )",
+      "parameters": []
+    },
+    "ignoreListenerMethods": "",
+    "useDefaultRowsLimit": true
+  }
+}

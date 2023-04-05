@@ -1,0 +1,9 @@
+// Utilizar <nome>.json
+{
+  "url": "String", // Url da base
+  "user": "String", // usuário login
+  "password": "String", // Senha login
+  "jarFilePath": "String", // Caminho do jar a ser enviado
+  "resourceId": "String", // identificador do modulo a ser criado/atualizado
+  "resourceDesc": "String" // Descrição do modulo a ser criado. OBS: Só é utilizado durante a CRIAÇÃO, não atualizando a descrição do modulo já existente
+}

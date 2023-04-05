@@ -1,0 +1,18 @@
+{
+  "serviceName": "DatasetSP.save",
+  "requestBody": {
+    "dataSetID": "00D",
+    "entityName": "ModuloAdicional",
+    "standAlone": false,
+    "fields": ["CODMODULO", "RESOURCEID", "DESCRMODULO"],
+    "records": [
+      {
+        "values": {
+          "1": "${{resourceId}}",
+          "2": "${{resourceDesc}}"
+        }
+      }
+    ],
+    "ignoreListenerMethods": ""
+  }
+}
