@@ -1,7 +1,7 @@
 use rust_embed::RustEmbed;
 
 #[derive(RustEmbed)]
-#[folder = "resources\\jsons"]
+#[folder = "resources/jsons"]
 pub struct Jsons;
 
 pub fn get_json(file_path: &str) -> String {
