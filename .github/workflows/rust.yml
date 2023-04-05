@@ -22,14 +22,3 @@ jobs:
       
     - name: Run tests
       run: cargo test --verbose
-      
-    - uses: "marvinpinto/action-automatic-releases@latest"
-    - name: "Release"
-      with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Development Build"
-          files: |
-            LICENSE.txt
-            "./release"
