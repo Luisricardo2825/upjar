@@ -39,6 +39,6 @@ jobs:
           title: "Development Build"
           files: |
             LICENSE.txt
-            ./target/release
+            target/release
 
     
