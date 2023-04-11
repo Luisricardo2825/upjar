@@ -1,7 +1,8 @@
 use std::env;
 
 use upjar::{
-    commands::post_modulo_java::post_modulo_java, schemas::builder_config::BuilderConfig,
+    commands::post_modulo_java::{post_modulo_java, PostModuleRet},
+    schemas::builder_config::BuilderConfig,
     utils::string_utils::get_external_json,
 };
 
@@ -21,8 +22,11 @@ async fn main() {
     let ret = post_modulo_java(&config).await;
 
     if ret.is_ok() {
-        let result = ret.unwrap();
-        return println!("Modulo jar criado/atualizado: {}", result);
+        let PostModuleRet {
+            module_id,
+            login_data: _,
+        } = ret.unwrap();
+        return println!("Modulo jar criado/atualizado: {}", module_id);
     }
 
     let result = ret.err().unwrap();

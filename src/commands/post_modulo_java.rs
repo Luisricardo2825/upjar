@@ -6,13 +6,10 @@ use crate::{
     auth::login::{login, LoginRet},
     schemas::{builder_config::BuilderConfig, login_schema::AccessData},
 };
-use serde::{Deserialize, Serialize};
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-struct GetLogResponse {
-    message: String,
-    created: bool,
+pub struct PostModuleRet {
+    pub module_id: String,
+    pub login_data: LoginRet,
 }
 
 /// Retorna N linhas do conteudo do arquivo de log encontrado
@@ -21,14 +18,14 @@ struct GetLogResponse {
 /// * `url` - Uma String representando a url de acesso
 /// *  `access_data` - Uma struct do tipo AccessData, relacionada as informações de login
 /// ```
-pub async fn post_modulo_java(config: &BuilderConfig) -> Result<String, String> {
+pub async fn post_modulo_java(config: &BuilderConfig) -> Result<PostModuleRet, String> {
     match action(config).await {
         Ok(data) => Ok(data),
         Err(e) => Err(e),
     }
 }
 
-async fn action(config: &BuilderConfig) -> Result<String, String> {
+async fn action(config: &BuilderConfig) -> Result<PostModuleRet, String> {
     let access_data = AccessData {
         password: config.to_owned().password,
         username: config.to_owned().user,
@@ -88,7 +85,11 @@ async fn action(config: &BuilderConfig) -> Result<String, String> {
                 file,
             )
             .await;
-            return Ok(module_id);
+            let a = PostModuleRet {
+                module_id: module_id,
+                login_data: login_data,
+            };
+            return Ok(a);
         }
     }
 }

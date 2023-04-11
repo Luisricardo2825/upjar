@@ -1,9 +1,9 @@
 use reqwest::Client;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::api::post_login::post_login;
 use crate::schemas::login_schema::{AccessData, Root};
-#[derive(Clone, Debug)] // we add the Clone trait to Morpheus struct
+#[derive(Clone, Debug, Default)] // we add the Clone trait to Morpheus struct
 pub struct LoginRet {
     pub root: Root,
     pub client: Client,
