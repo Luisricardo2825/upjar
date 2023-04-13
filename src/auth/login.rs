@@ -1,4 +1,4 @@
-use reqwest::Client;
+use reqwest::{Client, Url};
 use serde::{Deserialize, Serialize};
 
 use crate::api::post_login::post_login;
@@ -16,12 +16,34 @@ pub struct LoginError {
 }
 
 pub async fn login(url: String, access_data: AccessData) -> Result<LoginRet, LoginError> {
-    let get_login = post_login(url, access_data)
-        .await
-        .expect("Error getting data");
-    let client = get_login.1;
+    let check_url = Url::parse(&url);
 
-    let data = get_login.0;
+    if check_url.is_err() {
+        let error = check_url.unwrap_err();
+        let error_ret = LoginError {
+            message: error.to_string(),
+            ret_body: error.to_string(),
+        };
+        return Err(error_ret);
+    }
+
+    let parsed_url = check_url.unwrap();
+    let get_login = post_login(parsed_url.to_string(), access_data).await;
+
+    if get_login.is_err() {
+        let error = get_login.unwrap_err();
+        
+        let error_ret = LoginError {
+            message: error.to_string(),
+            ret_body: error.to_string(),
+        };
+        return Err(error_ret);
+    }
+
+    let login_data = get_login.unwrap();
+    let client = login_data.1;
+
+    let data = login_data.0;
 
     let serde_struct: Result<Root, serde_json::Error> = serde_json::from_str(&data);
     if serde_struct.is_err() {
@@ -31,13 +53,13 @@ pub async fn login(url: String, access_data: AccessData) -> Result<LoginRet, Log
             message: error.to_string(),
             ret_body: data,
         };
-        Err(error_ret)
+        return Err(error_ret);
     } else {
         let ret = LoginRet {
             root: serde_struct.unwrap(),
             client: client,
         };
 
-        Ok(ret)
+        return Ok(ret);
     }
 }
