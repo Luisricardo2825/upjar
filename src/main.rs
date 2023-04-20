@@ -26,9 +26,9 @@ async fn main() {
             module_id,
             login_data: _,
         } = ret.unwrap();
-        return println!("Modulo jar criado/atualizado: {}", module_id);
+        println!("Modulo jar criado/atualizado: {}", module_id)
+    } else {
+        let result = ret.err().unwrap();
+        println!("Ocorreu um erro {}", result)
     }
-
-    let result = ret.err().unwrap();
-    return println!("Ocorreu um erro {}", result);
 }

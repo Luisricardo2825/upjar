@@ -1,4 +1,9 @@
-use crate::{utils::replace_param::replace_param, resources::get_json, auth::login::LoginRet, schemas::{builder_config::BuilderConfig, post_cria_modulo_schema::PostCriaModuloSchema}};
+use crate::{
+    auth::login::LoginRet,
+    resources::get_json,
+    schemas::{builder_config::BuilderConfig, post_cria_modulo_schema::PostCriaModuloSchema},
+    utils::replace_param::replace_param,
+};
 
 use super::get_existing_module::get_existing_module;
 
@@ -7,7 +12,7 @@ pub async fn post_modulo(login_data: &LoginRet, config: &BuilderConfig) -> Resul
     let resource_id = (config).to_owned().resource_id;
     let resource_desc = (config).to_owned().resource_desc;
 
-    let LoginRet { root, client } = login_data; // pega os dados de login
+    let LoginRet { root, client, .. } = login_data; // pega os dados de login
 
     let jsession_token = String::from(&root.response_body.jsessionid.field); // Pega o jsession ID
     let mut json = get_json("postCriaModulo.json"); // Pega o json modelo da pasta "jsons"
@@ -41,5 +46,6 @@ pub async fn post_modulo(login_data: &LoginRet, config: &BuilderConfig) -> Resul
     }
     let response = (&json_parsed).response_body.as_ref().unwrap();
     let result = response.result.get(0).unwrap().get(0).unwrap().to_owned();
+
     Ok(result) // retorna o nome do arquivo
 }

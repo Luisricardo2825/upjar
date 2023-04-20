@@ -19,7 +19,6 @@ pub async fn post_login(
 
     json = replace_param(&json, "username", username);
     json = replace_param(&json, "password", password);
-
     let post_url = format!(
         "{}/mge/service.sbr?serviceName=MobileLoginSP.login&outputType=json",
         url

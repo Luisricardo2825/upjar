@@ -3,7 +3,7 @@ use crate::{
         get_existing_jar::get_existing_jar, post_add_jar::post_add_jar,
         post_delete_jar::post_delete_jar, post_file::post_file, post_modulo::post_modulo,
     },
-    auth::login::{login, LoginRet},
+    auth::login::{LoginRet, LoginTrait},
     schemas::{builder_config::BuilderConfig, login_schema::AccessData},
 };
 
@@ -31,24 +31,22 @@ async fn action(config: &BuilderConfig) -> Result<PostModuleRet, String> {
         username: config.to_owned().user,
     };
     let url = (config).to_owned().url;
-    let login_resp = match login(url.clone(), access_data.clone()).await {
-        Ok(a) => Ok(a),
-        Err(e) => Err(e),
-    };
-    if login_resp.is_err() {
-        let error = login_resp.unwrap_err();
+    let login = LoginRet::new(url.clone(), access_data.clone()).await;
+
+    if login.is_err() {
+        let error = login.unwrap_err();
         Err(serde_json::to_string(&error).expect("Erro ao incluir modulo"))
     } else {
-        let login_data = login_resp.ok().unwrap();
+        let login_data = (&login.as_ref()).unwrap();
         let module_return = post_modulo(&login_data, config).await;
 
         if module_return.is_err() {
             let result = module_return.err().unwrap();
-            Err(serde_json::to_string(&result).expect("Error Converting"))
+            return Err(serde_json::to_string(&result).expect("Error Converting"));
         } else {
             let module_id = module_return.ok().unwrap();
-            let LoginRet { root, client } = login_data.clone();
-            let jsession_token = String::from(root.response_body.jsessionid.field); // Pega o jsession ID
+            let LoginRet { root, client, .. } = &login_data;
+            let jsession_token = String::from(&(root.response_body.jsessionid.field)); // Pega o jsession ID
             let last_char = url.chars().last().unwrap();
             let file = post_file(&config, (&jsession_token).to_owned(), last_char, &client).await;
 
@@ -85,11 +83,13 @@ async fn action(config: &BuilderConfig) -> Result<PostModuleRet, String> {
                 file,
             )
             .await;
-            let a = PostModuleRet {
+            let module_ret = PostModuleRet {
                 module_id: module_id,
-                login_data: login_data,
+                login_data: login_data.clone(),
             };
-            return Ok(a);
+
+            login.unwrap().logout().await;
+            return Ok(module_ret);
         }
     }
 }
