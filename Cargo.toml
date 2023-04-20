@@ -1,6 +1,6 @@
 [package]
 name = "upjar"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 authors = ["Luis Ricardo Alves Santos"]
 description = "Lib for updating/creating java modules for Sankhya ERP"
