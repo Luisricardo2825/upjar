@@ -73,7 +73,7 @@ impl LoginTrait for LoginRet {
             return Ok(ret);
         }
     }
-    async fn logout(self) -> () {
+    async fn logout(self) {
         let this = self;
         println!("Realizando logout...");
         match logout(&this.client, &(this.url)).await {
