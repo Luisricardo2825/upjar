@@ -10,6 +10,7 @@ pub async fn post_login(
     access_data: AccessData,
 ) -> Result<(String, Client), Box<dyn Error>> {
     let client = reqwest::Client::builder()
+        .danger_accept_invalid_certs(true)
         .cookie_store(true)
         .build()
         .expect("Erro ao iniciar o client");
